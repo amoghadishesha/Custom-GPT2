@@ -14,6 +14,11 @@ Please install all requirements in requirements.txt using the following
 ## Run the code (training and Prediction)
 * python main.py
 
+## To run with trained weights:
+1. Download weights from google drive (check trained_weights readme) and save it in the the trained_weights folder
+2. Then run :
+ * python main.py -wtr 
+
  The folder structure is as follows:
 - Working Directorty
   - datasets
