@@ -38,7 +38,7 @@ def parse_args():
     
     parser.add_argument('-tsp', '--text-sample', help='sample text for generation', default="what is", type=str)
     parser.add_argument('-pm', '--trained-model', help='path to weights', default='./trained_weights/', type=str)
-    parser.add_argument('-tr', '--train-scratch', help='train from scratch or load weights', default=True, type=bool)
+    parser.add_argument('-tr', '--train-scratch', help='train from scratch or load weights', action='store_true')
     
     return parser.parse_args()
 
