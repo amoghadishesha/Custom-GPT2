@@ -1,0 +1,6 @@
+transformers
+tokenizers
+tensorflow
+keras
+tqdm
+sentencepiece
