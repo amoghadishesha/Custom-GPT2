@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Mar 14 17:03:09 2023
-
-@author: aus79
-"""
-
 
 import os
 from transformers import GPT2TokenizerFast
