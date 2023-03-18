@@ -1,3 +1,3 @@
 These are the files required for loading a model trained for 100 epochs on the custom medical text dataset. 
-The weights are extremely large (437MB) and cannot be uploaded on Github. Here is the link for the google drive folder- 
+The weights are extremely large (437MB) and cannot be uploaded on Github. Here is the link for the google drive folder-  https://drive.google.com/file/d/1meZygoJx6qd2UajzaFJn_NG05GuPKGTt/view?usp=share_link
 Please download the weights into the folder and provide the path in the code.
