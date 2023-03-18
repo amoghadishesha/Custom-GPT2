@@ -54,7 +54,6 @@ def cut_words(processer_num, text, result_dict):
         texts = text.split('\n')
         for line in tqdm(texts):
             try:
-                #cuts = " ".join(jieba.cut(line))
                 cuts=" ".join(line.split())
                 out_f.write(cuts+'\n')
             except UnicodeDecodeError:
@@ -82,7 +81,7 @@ def multiply_cut(handler, tasks):
 
     for job in jobs:
         try:
-            job.close()  # It may raise exception in python <=3.6
+            job.close()
         except:
             pass
     print("[all_task done]")
@@ -99,7 +98,7 @@ def preprocess(params,train_path):
     print(f'reading {params.raw_text}')
     with open(params.raw_text, 'r') as f:
         data = f.read().replace('  ', ' ').replace('\n\n', '\n')
-        print(f"total words: {len(data)}") #352124
+        print(f"total words: {len(data)}") 
 
     print(f"split data into {params.split_text} pieces")
     text_task = split_data(data,params)
@@ -132,20 +131,20 @@ if __name__ == '__main__':
         model,tokenizer=train(params,model,tokenizer,string_tokenized)
         print(" model training complete")
 
-        output_dir = params.model_path# creating directory if it is not present
+        output_dir = params.model_path  #creating directory for saving model if it is not present
         if not os.path.exists(output_dir):
           os.mkdir(output_dir)
         model_to_save = model.module if hasattr(model, 'module') else model
         output_model_file = os.path.join(output_dir, WEIGHTS_NAME)
-        output_config_file = os.path.join(output_dir, CONFIG_NAME)# save model and model configs
-        model.save_pretrained(output_dir)
-        model_to_save.config.to_json_file(output_config_file)# save tokenizer
-        tokenizer.save_pretrained(output_dir)
+        output_config_file = os.path.join(output_dir, CONFIG_NAME)
+        model.save_pretrained(output_dir)   # save model and model configs
+        model_to_save.config.to_json_file(output_config_file)
+        tokenizer.save_pretrained(output_dir)  # save tokenizer
 
-        tokenizer = GPT2Tokenizer.from_pretrained(output_dir)
-        model = TFGPT2LMHeadModel.from_pretrained(output_dir)
+        tokenizer = GPT2Tokenizer.from_pretrained(output_dir) #load tokenizer
+        model = TFGPT2LMHeadModel.from_pretrained(output_dir)  #load model
         sampletext=params.text_sample
-        input_ids = tokenizer.encode(sampletext, return_tensors='tf')# getting out output
+        input_ids = tokenizer.encode(sampletext, return_tensors='tf')
         beam_output = model.generate(
           input_ids,
           max_length = 128,
@@ -153,14 +152,14 @@ if __name__ == '__main__':
           temperature = 0.8,
           no_repeat_ngram_size=2,
           num_return_sequences=5
-        )
+        ) # getting output decoded
         outp=tokenizer.decode(beam_output[4]).replace('<|eos|>','')
         print(outp)
     else:
         tokenizer = GPT2Tokenizer.from_pretrained(params.trained_model)
         model = TFGPT2LMHeadModel.from_pretrained(params.trained_model)
         sampletext=params.text_sample
-        input_ids = tokenizer.encode(sampletext, return_tensors='tf')# getting out output
+        input_ids = tokenizer.encode(sampletext, return_tensors='tf')
         beam_output = model.generate(
           input_ids,
           max_length = 128,
@@ -168,7 +167,7 @@ if __name__ == '__main__':
           temperature = 0.8,
           no_repeat_ngram_size=2,
           num_return_sequences=5
-        )
+        ) # getting output decoded
         outp=tokenizer.decode(beam_output[4]).replace('<|eos|>','')
         print(outp)
         
