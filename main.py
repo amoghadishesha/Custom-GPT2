@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar 17 15:32:57 2023
-
-@author: aus79
-"""
-
 import os
 from argparse import ArgumentParser
 import numpy as np
@@ -44,7 +36,9 @@ def parse_args():
     parser.add_argument('-e', '--nb-epochs', help='number of epochs', default=1, type=int)
     parser.add_argument('-ep', '--epsilon', help='adam parameter epsilon', default=1e-8, type=float)
     
-    parser.add_argument('-tsp', '--text_sample', help='sample text for generation', default="what is", type=str)
+    parser.add_argument('-tsp', '--text-sample', help='sample text for generation', default="what is", type=str)
+    parser.add_argument('-pm', '--trained-model', help='path to weights', default='./weightsfor100epochs/', type=str)
+    parser.add_argument('tr', '--train-scratch', help='train from scratch or load weights', default=True, type=bool)
     
     return parser.parse_args()
 
@@ -128,38 +122,54 @@ if __name__ == '__main__':
     #train_path=params.raw_cut_path
     if not os.path.exists(train_path):
         os.mkdir(train_path)
+    if params.train_scratch:    
+        preprocess(params,train_path)
+        print("data preprocess complete")
+        _=tokenize(train_path,params.tokenizer_path)
+        print("tokenizer training complete")
+        model,tokenizer,string_tokenized=prepare(params)
+        print("model architecture and data prep complete")
+        model,tokenizer=train(params,model,tokenizer,string_tokenized)
+        print(" model training complete")
+
+        output_dir = params.model_path# creating directory if it is not present
+        if not os.path.exists(output_dir):
+          os.mkdir(output_dir)
+        model_to_save = model.module if hasattr(model, 'module') else model
+        output_model_file = os.path.join(output_dir, WEIGHTS_NAME)
+        output_config_file = os.path.join(output_dir, CONFIG_NAME)# save model and model configs
+        model.save_pretrained(output_dir)
+        model_to_save.config.to_json_file(output_config_file)# save tokenizer
+        tokenizer.save_pretrained(output_dir)
+
+        tokenizer = GPT2Tokenizer.from_pretrained(output_dir)
+        model = TFGPT2LMHeadModel.from_pretrained(output_dir)
+        sampletext=params.text_sample
+        input_ids = tokenizer.encode(sampletext, return_tensors='tf')# getting out output
+        beam_output = model.generate(
+          input_ids,
+          max_length = 128,
+          num_beams = 5,
+          temperature = 0.8,
+          no_repeat_ngram_size=2,
+          num_return_sequences=5
+        )
+        outp=tokenizer.decode(beam_output[4]).replace('<|eos|>','')
+        print(outp)
+    else:
+        tokenizer = GPT2Tokenizer.from_pretrained(params.trained_model)
+        model = TFGPT2LMHeadModel.from_pretrained(params.trained_model)
+        sampletext=params.text_sample
+        input_ids = tokenizer.encode(sampletext, return_tensors='tf')# getting out output
+        beam_output = model.generate(
+          input_ids,
+          max_length = 128,
+          num_beams = 5,
+          temperature = 0.8,
+          no_repeat_ngram_size=2,
+          num_return_sequences=5
+        )
+        outp=tokenizer.decode(beam_output[4]).replace('<|eos|>','')
+        print(outp)
         
-    preprocess(params,train_path)
-    print("data preprocess complete")
-    _=tokenize(train_path,params.tokenizer_path)
-    print("tokenizer training complete")
-    model,tokenizer,string_tokenized=prepare(params)
-    print("model architecture and data prep complete")
-    model,tokenizer=train(params,model,tokenizer,string_tokenized)
-    print(" model training complete")
-    
-    output_dir = params.model_path# creating directory if it is not present
-    if not os.path.exists(output_dir):
-      os.mkdir(output_dir)
-    model_to_save = model.module if hasattr(model, 'module') else model
-    output_model_file = os.path.join(output_dir, WEIGHTS_NAME)
-    output_config_file = os.path.join(output_dir, CONFIG_NAME)# save model and model configs
-    model.save_pretrained(output_dir)
-    model_to_save.config.to_json_file(output_config_file)# save tokenizer
-    tokenizer.save_pretrained(output_dir)
-    
-    tokenizer = GPT2Tokenizer.from_pretrained(output_dir)
-    model = TFGPT2LMHeadModel.from_pretrained(output_dir)
-    sampletext=params.text_sample
-    input_ids = tokenizer.encode(sampletext, return_tensors='tf')# getting out output
-    beam_output = model.generate(
-      input_ids,
-      max_length = 128,
-      num_beams = 5,
-      temperature = 0.8,
-      no_repeat_ngram_size=2,
-      num_return_sequences=5
-    )
-    outp=tokenizer.decode(beam_output[4]).replace('<|eos|>','')
-    print(outp)
     
