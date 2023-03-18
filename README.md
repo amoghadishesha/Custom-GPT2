@@ -10,6 +10,8 @@ Finally, the code includes a simple to use terminal interface along with an opti
 Please install all requirements in requirements.txt using the following 
 
 * pip install -r requirements.txt
+
+## Run the code (training and Prediction)
 * python main.py
 
  The folder structure is as follows:
