@@ -1,0 +1,2 @@
+These are the weights for the GPT2 model trained for 100 Epochs with the provided dataset
+The train accuracy was 0.981 at the end of 100 epochs
