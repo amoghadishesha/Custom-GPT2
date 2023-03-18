@@ -38,7 +38,7 @@ def parse_args():
     
     parser.add_argument('-tsp', '--text-sample', help='sample text for generation', default="what is", type=str)
     parser.add_argument('-pm', '--trained-model', help='path to weights', default='./trained_weights/', type=str)
-    parser.add_argument('-tr', '--train-scratch', help='train from scratch or load weights', action='store_false')
+    parser.add_argument('-wtr', '--load-trained', help='train from scratch or load weights', action='store_false')
     
     return parser.parse_args()
 
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     #train_path=params.raw_cut_path
     if not os.path.exists(train_path):
         os.mkdir(train_path)
-    if params.train_scratch:    
+    if params.load_trained:    
         preprocess(params,train_path)
         print("data preprocess complete")
         _=tokenize(train_path,params.tokenizer_path)
