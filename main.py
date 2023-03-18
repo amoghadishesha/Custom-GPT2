@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument('-bff', '--buffer-size', help='buffer size', default=1000, type=int)
     
     parser.add_argument('-lr', '--learning-rate', help='learning  rate', default=0.0001, type=float)
-    parser.add_argument('-e', '--nb-epochs', help='number of epochs', default=1, type=int)
+    parser.add_argument('-e', '--nb-epochs', help='number of epochs', default=100, type=int)
     parser.add_argument('-ep', '--epsilon', help='adam parameter epsilon', default=1e-8, type=float)
     
     parser.add_argument('-tsp', '--text-sample', help='sample text for generation', default="what is", type=str)
