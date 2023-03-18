@@ -10,12 +10,7 @@ Finally, the code includes a simple to use terminal interface along with an opti
 Please install all requirements in requirements.txt using the following 
 
 * pip install -r requirements.txt
-
-If you are using an interpreter or other visual interfaces, open main.py and update the arguments according to your preferred folder structure
-If you are using a terminal interace use the follwing sample code to run the training process-
-
-
-* python main.py - --working-dir='./gpt/' --raw-text='./gpt/dataset/raw.txt/ -tr=True --nb-epochs=100 
+* python main.py
 
  The folder structure is as follows:
 - Working Directorty
